@@ -4,11 +4,6 @@ import datetime
 import random
 import pytz
 import sqlite3
-import time
-from flask import Flask
-from threading import Thread
-
-app = Flask(__name__)
 
 TELEGRAM_BOT_TOKEN = "7211810846:AAFchPh2P70ZWlQPEH1WAVgaLxngvkHmz3A"
 TELEGRAM_CHAT_ID = "1631288026"
@@ -146,35 +141,11 @@ def check_end_of_day():
     else:
         print("Time is not yet 10:30 PM IST.")
 
-def run_bot():
-    print("DEBUG: Bot thread starting")
-    while True:
-        try:
-            setup_database()
-            notify_question_count()
-            check_end_of_day()
-            print("DEBUG: Starting 5-minute sleep")
-            for _ in range(300):  # 300 seconds = 5 minutes
-                time.sleep(1)
-                if _ % 60 == 0:
-                    print(f"DEBUG: Sleeping, {5 - (_ // 60)} minutes remaining")
-            print("DEBUG: Sleep complete, restarting loop")
-        except Exception as e:
-            print(f"ERROR: Bot crashed with {str(e)}")
-            time.sleep(10)
-
-def health_monitor():
-    print("DEBUG: Health monitor starting")
-    while True:
-        print("DEBUG: Health monitor alive")
-        time.sleep(30)  # Log every 30 seconds to keep Flask active
-
-@app.route('/')
-def health_check():
-    print("DEBUG: Health check accessed")
-    return "Bot is running"
-
 if __name__ == "__main__":
-    Thread(target=run_bot).start()
-    Thread(target=health_monitor).start()  # Start health monitor
-    app.run(host='0.0.0.0', port=int(os.getenv("PORT", 8080)))
+    print("DEBUG: Bot starting")
+    try:
+        setup_database()
+        notify_question_count()
+        check_end_of_day()
+    except Exception as e:
+        print(f"ERROR: Bot crashed with {str(e)}")
