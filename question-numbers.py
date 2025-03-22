@@ -159,3 +159,18 @@ if __name__ == "__main__":
     setup_database()
     notify_question_count()
     check_end_of_day()
+    def get_db_value(key):
+    conn, cursor = connect_db()
+    cursor.execute("SELECT value FROM tracker WHERE key = ?", (key,))
+    result = cursor.fetchone()
+    value = result[0] if result else None
+    print(f"DEBUG: Retrieved {key} = {value}")
+    conn.close()
+    return value
+
+def set_db_value(key, value):
+    conn, cursor = connect_db()
+    cursor.execute("INSERT OR REPLACE INTO tracker (key, value) VALUES (?, ?)", (key, str(value)))
+    conn.commit()
+    print(f"DEBUG: Set {key} = {value}")
+    conn.close()
