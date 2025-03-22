@@ -155,8 +155,8 @@ if __name__ == "__main__":
             print("DEBUG: Starting 5-minute sleep")
             for _ in range(300):
                 time.sleep(1)
-                if _ % 60 == 0:
-                    print(f"DEBUG: Sleeping, {5 - (_ // 60)} minutes remaining")
+                if _ % 10 == 0:
+                    print(f"DEBUG: Sleeping, {300 - _} seconds remaining")
             print("DEBUG: Sleep complete, restarting loop")
         except Exception as e:
             print(f"ERROR: Bot crashed with {str(e)}")
