@@ -4,6 +4,7 @@ import datetime
 import random
 import pytz
 import sqlite3
+import time
 
 # Telegram and Google Chat credentials
 TELEGRAM_BOT_TOKEN = "7211810846:AAFchPh2P70ZWlQPEH1WAVgaLxngvkHmz3A"
@@ -28,32 +29,21 @@ HEADERS = {
 }
 CONTEST_SLUG = "peacemakers24b1"
 
-# Database connection and setup
 def connect_db():
-    """Connect to the SQLite database and return connection and cursor."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     return conn, cursor
 
 def setup_database():
-    """Set up the SQLite database and table."""
     conn, cursor = connect_db()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS tracker (
-            key TEXT PRIMARY KEY,
-            value TEXT
-        )
-    """)
-    # Initialize default values
+    cursor.execute("CREATE TABLE IF NOT EXISTS tracker (key TEXT PRIMARY KEY, value TEXT)")
     cursor.execute("INSERT OR IGNORE INTO tracker (key, value) VALUES ('question_count', '0')")
     cursor.execute("INSERT OR IGNORE INTO tracker (key, value) VALUES ('last_update', '')")
     cursor.execute("INSERT OR IGNORE INTO tracker (key, value) VALUES ('no_questions_sent', '')")
     conn.commit()
     conn.close()
 
-# Helper functions for database operations
 def get_db_value(key):
-    """Get a value from the database."""
     conn, cursor = connect_db()
     cursor.execute("SELECT value FROM tracker WHERE key = ?", (key,))
     result = cursor.fetchone()
@@ -61,14 +51,12 @@ def get_db_value(key):
     return result[0] if result else None
 
 def set_db_value(key, value):
-    """Set a value in the database."""
     conn, cursor = connect_db()
     cursor.execute("INSERT OR REPLACE INTO tracker (key, value) VALUES (?, ?)", (key, str(value)))
     conn.commit()
     conn.close()
 
 def fetch_questions():
-    """Fetch all questions from the contest and return their names."""
     offset = 0
     limit = 10
     all_questions = []
@@ -89,7 +77,6 @@ def fetch_questions():
     return len(all_questions), all_questions
 
 def send_telegram_message(message):
-    """Send a Telegram message notification."""
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     data = {"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "Markdown"}
     response = requests.post(url, data=data)
@@ -97,13 +84,11 @@ def send_telegram_message(message):
           f"❌ Telegram failed: {response.status_code}, {response.text}")
 
 def send_google_chat_message(message):
-    """Send a message to Google Chat."""
     response = requests.post(GOOGLE_CHAT_WEBHOOK_URL, json={"text": message})
     print("✅ Google Chat notification sent!" if response.status_code == 200 else 
           f"❌ Google Chat failed: {response.status_code}, {response.text}")
 
 def notify_question_count():
-    """Fetch, compare, and send question count update with names."""
     question_count, question_names = fetch_questions()
     if question_count is None:
         print("❌ Failed to fetch questions.")
@@ -120,7 +105,7 @@ def notify_question_count():
             messages = [
                 f"🔥 {difference} new coding challenge just arrived! Will you be the first to solve them? ⚡",
                 f"💡 {difference} fresh problem are waiting for you. Time to showcase your skills! 🚀",
-                # (Add your full list here)
+                # Add your full list here
             ]
             message = f"{random.choice(messages)}\n\n📌 New Questions:\n" + "\n".join([f"✨ {q}" for q in new_questions])
             send_telegram_message(message)
@@ -133,7 +118,6 @@ def notify_question_count():
     set_db_value("last_update", datetime.datetime.now().strftime("%Y-%m-%d"))
 
 def check_end_of_day():
-    """Send a message if no new questions by 10:30 PM IST, once per day."""
     utc_now = datetime.datetime.now(datetime.timezone.utc)
     ist_time = utc_now.astimezone(pytz.timezone("Asia/Kolkata"))
     today_date = ist_time.strftime("%Y-%m-%d")
@@ -145,7 +129,7 @@ def check_end_of_day():
         if last_update_date != today_date and no_questions_sent_date != today_date:
             messages = [
                 "🕰️ The battlefield remained quiet today. But remember, the real warriors sharpen their blades in silence. ⚔️🔥",
-                # (Add your full list here)
+                # Add your full list here
             ]
             message = random.choice(messages)
             send_telegram_message(message)
@@ -154,23 +138,9 @@ def check_end_of_day():
     else:
         print("Time is not yet 10:30 PM IST.")
 
-# Run the bot
 if __name__ == "__main__":
-    setup_database()
-    notify_question_count()
-    check_end_of_day()
-    def get_db_value(key):
-    conn, cursor = connect_db()
-    cursor.execute("SELECT value FROM tracker WHERE key = ?", (key,))
-    result = cursor.fetchone()
-    value = result[0] if result else None
-    print(f"DEBUG: Retrieved {key} = {value}")
-    conn.close()
-    return value
-
-def set_db_value(key, value):
-    conn, cursor = connect_db()
-    cursor.execute("INSERT OR REPLACE INTO tracker (key, value) VALUES (?, ?)", (key, str(value)))
-    conn.commit()
-    print(f"DEBUG: Set {key} = {value}")
-    conn.close()
+    while True:
+        setup_database()
+        notify_question_count()
+        check_end_of_day()
+        time.sleep(300)  # 5 minutes
