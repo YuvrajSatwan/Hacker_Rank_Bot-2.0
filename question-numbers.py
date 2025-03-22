@@ -5,6 +5,11 @@ import random
 import pytz
 import sqlite3
 import time
+from flask import Flask
+from threading import Thread
+
+# Flask app
+app = Flask(__name__)
 
 # Credentials
 TELEGRAM_BOT_TOKEN = "7211810846:AAFchPh2P70ZWlQPEH1WAVgaLxngvkHmz3A"
@@ -145,19 +150,25 @@ def check_end_of_day():
     else:
         print("Time is not yet 10:30 PM IST.")
 
-if __name__ == "__main__":
-    print("DEBUG: Bot starting")
+def run_bot():
+    print("DEBUG: Bot thread starting")
     while True:
         try:
             setup_database()
             notify_question_count()
             check_end_of_day()
-            print("DEBUG: Starting 5-minute sleep")
-            for _ in range(300):
-                time.sleep(1)
-                if _ % 10 == 0:
-                    print(f"DEBUG: Sleeping, {300 - _} seconds remaining")
-            print("DEBUG: Sleep complete, restarting loop")
+            print("DEBUG: Sleeping for 5 minutes")
+            time.sleep(300)  # Back to simple sleep since Flask keeps container alive
         except Exception as e:
             print(f"ERROR: Bot crashed with {str(e)}")
             time.sleep(10)
+
+@app.route('/')
+def health_check():
+    return "Bot is running"
+
+if __name__ == "__main__":
+    # Start bot in a separate thread
+    Thread(target=run_bot).start()
+    # Run Flask app
+    app.run(host='0.0.0.0', port=int(os.getenv("PORT", 8080)))
