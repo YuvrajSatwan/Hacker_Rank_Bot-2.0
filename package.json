@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "google-spreadsheet": "^4.1.4",
+    "puppeteer": "^24.3.0"
+  }
+}
