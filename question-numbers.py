@@ -9,7 +9,7 @@ TELEGRAM_BOT_TOKEN = "7211810846:AAFchPh2P70ZWlQPEH1WAVgaLxngvkHmz3A"
 TELEGRAM_CHAT_ID = "1631288026"
 
 # Replace with your Google Chat webhook URL
-GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAAqdu6QBk/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=UjAlZTONaFT-V759NSCj15vrUFXZv5n-XRabfoIU65Q"  # VERY IMPORTANT!
+GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAABLlXXMM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=AxaA5jffPFX7ks0JXC4tGUkisYoSRvH8rv0BtX9xHBg"  # VERY IMPORTANT!
 
 # File to store the last question count and last update time
 COUNT_FILE = "question_count.txt"
@@ -237,7 +237,7 @@ def check_end_of_day():
             message = messages[random_index]
 
             send_telegram_message(message)
-             # Send to Google Chat as well
+             send_google_chat_message(message) # Send to Google Chat as well
             mark_no_questions_message_sent()  # Mark message as sent
         else:
             print("Conditions not met for 'no questions today' message.")
