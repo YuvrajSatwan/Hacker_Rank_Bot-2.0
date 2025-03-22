@@ -148,8 +148,12 @@ def check_end_of_day():
 if __name__ == "__main__":
     print("DEBUG: Bot starting")
     while True:
-        setup_database()
-        notify_question_count()
-        check_end_of_day()
-        print("DEBUG: Sleeping for 5 minutes")
-        time.sleep(300)
+        try:
+            setup_database()
+            notify_question_count()
+            check_end_of_day()
+            print("DEBUG: Sleeping for 5 minutes")
+            time.sleep(300)
+        except Exception as e:
+            print(f"ERROR: Bot crashed with {str(e)}")
+            time.sleep(10)  # Wait before retrying
