@@ -156,12 +156,18 @@ def run_bot():
             print("DEBUG: Starting 5-minute sleep")
             for _ in range(300):  # 300 seconds = 5 minutes
                 time.sleep(1)
-                if _ % 60 == 0:  # Log every minute
+                if _ % 60 == 0:
                     print(f"DEBUG: Sleeping, {5 - (_ // 60)} minutes remaining")
             print("DEBUG: Sleep complete, restarting loop")
         except Exception as e:
             print(f"ERROR: Bot crashed with {str(e)}")
             time.sleep(10)
+
+def health_monitor():
+    print("DEBUG: Health monitor starting")
+    while True:
+        print("DEBUG: Health monitor alive")
+        time.sleep(30)  # Log every 30 seconds to keep Flask active
 
 @app.route('/')
 def health_check():
@@ -170,4 +176,5 @@ def health_check():
 
 if __name__ == "__main__":
     Thread(target=run_bot).start()
+    Thread(target=health_monitor).start()  # Start health monitor
     app.run(host='0.0.0.0', port=int(os.getenv("PORT", 8080)))
