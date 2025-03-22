@@ -237,7 +237,7 @@ def check_end_of_day():
             message = messages[random_index]
 
             send_telegram_message(message)
-            send_google_chat_message(message)  # Send to Google Chat as well
+             # Send to Google Chat as well
             mark_no_questions_message_sent()  # Mark message as sent
         else:
             print("Conditions not met for 'no questions today' message.")
