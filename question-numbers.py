@@ -173,7 +173,8 @@ def notify_question_count():
             message = f"{base_message}\n\n📌 New Questions:\n{question_list}"
 
             send_telegram_message(message)
-                         send_google_chat_message(message) # Send to Google Chat as well
+                
+            send_google_chat_message(message)
         else:
             print("No new questions. Skipping notification.")
             return
