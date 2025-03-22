@@ -8,18 +8,14 @@ import time
 from flask import Flask
 from threading import Thread
 
-# Flask app
 app = Flask(__name__)
 
-# Credentials
 TELEGRAM_BOT_TOKEN = "7211810846:AAFchPh2P70ZWlQPEH1WAVgaLxngvkHmz3A"
 TELEGRAM_CHAT_ID = "1631288026"
 GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAABLlXXMM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=AxaA5jffPFX7ks0JXC4tGUkisYoSRvH8rv0BtX9xHBg"
 
-# SQLite path
 DB_PATH = "/data/hackerrank_counts.db" if os.path.exists("/data") else "hackerrank_counts.db"
 
-# HackerRank config
 COOKIES = {
     "hackerrank_mixpanel_token": "2dab64b2-51e9-4c69-a1da-0014edcf9825",
     "peacemakers24b1_crp": "*nil*",
@@ -158,7 +154,7 @@ def run_bot():
             notify_question_count()
             check_end_of_day()
             print("DEBUG: Sleeping for 5 minutes")
-            time.sleep(300)  # Back to simple sleep since Flask keeps container alive
+            time.sleep(300)
         except Exception as e:
             print(f"ERROR: Bot crashed with {str(e)}")
             time.sleep(10)
@@ -168,7 +164,5 @@ def health_check():
     return "Bot is running"
 
 if __name__ == "__main__":
-    # Start bot in a separate thread
     Thread(target=run_bot).start()
-    # Run Flask app
     app.run(host='0.0.0.0', port=int(os.getenv("PORT", 8080)))
