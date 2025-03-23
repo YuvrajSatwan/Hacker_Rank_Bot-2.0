@@ -134,9 +134,9 @@ def format_questions(questions, platform="telegram"):
 
     for name, slug in questions:
         if platform.lower() == "telegram":
-            formatted.append(f"🔸<a href='{base_url}/{slug}'>{name}</a>")
+            formatted.append(f"<a href='{base_url}/{slug}'>{name}</a>")
         elif platform.lower() == "google_chat":
-            formatted.append(f"🔸<{base_url}/{slug}|{name}>")
+            formatted.append(f"<{base_url}/{slug}|{name}>")
 
     return "\n".join(formatted)
 
@@ -178,517 +178,446 @@ def notify_question_count():
         logging.warning("Failed to fetch questions, skipping notification.")
         return
 
-    last_count = int(get_db_value("question_count") or 0)
+    last_count_raw = get_db_value("question_count")
+    last_count = int(last_count_raw) if last_count_raw is not None else 0
+    logging.info(f"Last count: {last_count}, Current count: {question_count}")
 
-    if last_count == 0:
-        formatted_questions_telegram = format_questions(questions, "telegram")
-        formatted_questions_google = format_questions(questions, "google_chat")
+    formatted_questions_telegram = format_questions(questions, "telegram")
+    formatted_questions_google = format_questions(questions, "google_chat")
 
-        telegram_initial = f"""🚀 *Contest Launch!* {question_count} challenges detected!  
-📌 **Initial Problems:**  
-{formatted_questions_telegram}  
-_'First to solve gets bragging rights!' - Tony Stark_"""
-
-        google_initial = f"""🚀 *Contest Launch!* {question_count} challenges detected!  
-📌 *Initial Problems:*  
-{formatted_questions_google}  
-_First to solve gets bragging rights! - Tony Stark_"""
-
-        send_telegram_message(telegram_initial)
-        send_google_chat_message(google_initial)
-    else:
-        difference = question_count - last_count
-        if difference > 0:
-            new_questions = questions[-difference:]
-            formatted_questions_telegram = format_questions(new_questions, "telegram")
-            formatted_questions_google = format_questions(new_questions, "google_chat")
-
-            # 60 uniquely styled notification messages
-            notification_templates = [
-                # Marvel
-                f"""💥 *{difference} CHALLENGES INCOMING!*  
+    # Always send a random epic message
+    notification_templates = [
+        # Marvel
+        f"""💥 *{question_count} CHALLENGES INCOMING!*  
 _*"The hardest choices require the strongest wills." - Thanos (Infinity War)*_  
 Your resolve shapes destiny.  
-===  
-⚡ *Targets:*  
+- *Targets:*  
 {formatted_questions_telegram}  
 Snap them out. Rule the ashes.""",
 
-                f"""🔔 *{difference} CHALLENGES DROP!*  
+        f"""🔔 *{question_count} CHALLENGES DROP!*  
 _*"I can do this all day." - Steve Rogers (Civil War)*_  
 Endurance is your armor.  
->>>  
-🗡️ *Fight Zone:*  
+- *Fight Zone:*  
 {formatted_questions_telegram}  
 Swing ‘til dawn. Never break.""",
 
-                f"""🔴 *{difference} TARGETS LOCKED!*  
+        f"""🔴 *{question_count} TARGETS LOCKED!*  
 _*"I’m not locked in here with you. You’re locked in here with me." - Tony Stark (Iron Man)*_  
 You’re the hunter.  
----  
-🎯 *Prey List:*  
+- *Prey List:*  
 {formatted_questions_telegram}  
 Strike fast. Genius wins.""",
 
-                f"""🌩️ *{difference} CHALLENGES RISE!*  
+        f"""🌩️ *{question_count} CHALLENGES RISE!*  
 _*"Whatever it takes." - Avengers (Endgame)*_  
 Victory demands all.  
-~~~  
-🔥 *Mission Brief:*  
+- *Mission Brief:*  
 {formatted_questions_telegram}  
 Give it. Take it. No less.""",
 
-                f"""💀 *{difference} FOES UNLEASHED!*  
+        f"""💀 *{question_count} FOES UNLEASHED!*  
 _*"We have a Hulk." - Tony Stark (The Avengers)*_  
 Rage is your edge.  
->>>  
-👊 *Smash Targets:*  
+- *Smash Targets:*  
 {formatted_questions_telegram}  
 Crush them. Leave rubble.""",
 
-                f"""⚙️ *{difference} TRIALS IGNITE!*  
+        f"""⚙️ *{question_count} TRIALS IGNITE!*  
 _*"I am Iron Man." - Tony Stark (Iron Man)*_  
 You’re the spark.  
-===  
-🔧 *Your Forge:*  
+- *Your Forge:*  
 {formatted_questions_telegram}  
 Build it. Claim it.""",
 
-                f"""🕷️ *{difference} CHALLENGES LAND!*  
+        f"""🕷️ *{question_count} CHALLENGES LAND!*  
 _*"With great power comes great responsibility." - Uncle Ben (Spider-Man)*_  
 Power’s yours to wield.  
----  
-🌐 *Web of Duty:*  
+- *Web of Duty:*  
 {formatted_questions_telegram}  
 Rise up. Own it.""",
 
-                # DC
-                f"""🌙 *{difference} CHALLENGES STRIKE!*  
+        # DC
+        f"""🌙 *{question_count} CHALLENGES STRIKE!*  
 _*"I’m not a hero. I’m a high-functioning disaster." - Batman (The Dark Knight, paraphrased)*_  
 Chaos fuels you.  
->>>  
-🦇 *Shadows:*  
+- *Shadows:*  
 {formatted_questions_telegram}  
 Burn the night. Win the day.""",
 
-                f"""⚖️ *{difference} TESTS DESCEND!*  
+        f"""⚖️ *{question_count} TESTS DESCEND!*  
 _*"It’s not who I am underneath, but what I do that defines me." - Batman (Batman Begins)*_  
 Deeds are your voice.  
-===  
-✊ *Proof:*  
+- *Proof:*  
 {formatted_questions_telegram}  
 Act now. Be heard.""",
 
-                f"""🦇 *{difference} FOES RISE!*  
+        f"""🦇 *{question_count} FOES RISE!*  
 _*"Why do we fall? So we can learn to pick ourselves up." - Alfred (Batman Begins)*_  
 Every fall’s a lesson.  
----  
-⬆️ *Ascent:*  
+- *Ascent:*  
 {formatted_questions_telegram}  
 Rise stronger. Dominate.""",
 
-                f"""🌌 *{difference} TRIALS EMERGE!*  
+        f"""🌌 *{question_count} TRIALS EMERGE!*  
 _*"I am vengeance. I am the night." - Batman (Batman: The Animated Series)*_  
 You’re their nightmare.  
-~~~  
-⚡ *Justice:*  
+- *Justice:*  
 {formatted_questions_telegram}  
 Strike swift. End them.""",
 
-                f"""☀️ *{difference} CHALLENGES CALL!*  
+        f"""☀️ *{question_count} CHALLENGES CALL!*  
 _*"The world only makes sense if you force it to." - Superman (Man of Steel, paraphrased)*_  
 Bend it to your will.  
->>>  
-🛠️ *Order:*  
+- *Order:*  
 {formatted_questions_telegram}  
 Shape it. Rule it.""",
 
-                # Game of Thrones
-                f"""👑 *{difference} CHALLENGES MARCH!*  
+        # Game of Thrones
+        f"""👑 *{question_count} CHALLENGES MARCH!*  
 _*"When you play the game of thrones, you win or you die." - Cersei Lannister*_  
 Crown or grave.  
-===  
-⚔️ *Throne Room:*  
+- *Throne Room:*  
 {formatted_questions_telegram}  
 Take it. Reign.""",
 
-                f"""🔥 *{difference} FOES APPROACH!*  
+        f"""🔥 *{question_count} FOES APPROACH!*  
 _*"The night is dark and full of terrors." - Melisandre*_  
 You’re the dawn.  
----  
-💡 *Light:*  
+- *Light:*  
 {formatted_questions_telegram}  
 Burn them out. Shine.""",
 
-                f"""🌊 *{difference} BATTLES BEGIN!*  
+        f"""🌊 *{question_count} BATTLES BEGIN!*  
 _*"I am the storm, my lord. The first storm and the last." - Euron Greyjoy*_  
 You’re the tempest.  
-~~~  
-⚡ *Fury:*  
+- *Fury:*  
 {formatted_questions_telegram}  
 Wreck them. Reign.""",
 
-                f"""🦁 *{difference} TESTS ARRIVE!*  
+        f"""🦁 *{question_count} TESTS ARRIVE!*  
 _*"A lion does not concern himself with the opinions of sheep." - Tywin Lannister*_  
 You’re the predator.  
->>>  
-👑 *Dominion:*  
+- *Dominion:*  
 {formatted_questions_telegram}  
 Roar. Feast.""",
 
-                f"""❄️ *{difference} CHALLENGES DROP!*  
+        f"""❄️ *{question_count} CHALLENGES DROP!*  
 _*"Winter is coming." - Ned Stark*_  
 Steel yourself.  
----  
-🛡️ *Defense:*  
+- *Defense:*  
 {formatted_questions_telegram}  
 Stand firm. Thrive.""",
 
-                # Attack on Titan
-                f"""🏰 *{difference} CHALLENGES BREACH!*  
+        # Attack on Titan
+        f"""🏰 *{question_count} CHALLENGES BREACH!*  
 _*"If you win, you live. If you lose, you die." - Eren Yeager*_  
 Survival’s the stakes.  
-===  
-🗡️ *Walls:*  
+- *Walls:*  
 {formatted_questions_telegram}  
 Fight like hell. Live.""",
 
-                f"""🏃 *{difference} FOES ADVANCE!*  
+        f"""🏃 *{question_count} FOES ADVANCE!*  
 _*"I’ll keep moving forward, until my enemies are destroyed." - Eren Yeager*_  
 Momentum’s your blade.  
->>>  
-➡️ *Path:*  
+- *Path:*  
 {formatted_questions_telegram}  
 Charge. Erase.""",
 
-                f"""🕊️ *{difference} TRIALS LOOM!*  
+        f"""🕊️ *{question_count} TRIALS LOOM!*  
 _*"We’re born free. All of us." - Erwin Smith*_  
 Freedom’s your birthright.  
----  
-✊ *Liberty:*  
+- *Liberty:*  
 {formatted_questions_telegram}  
 Earn it. Break free.""",
 
-                f"""❤️ *{difference} CHALLENGES ATTACK!*  
+        f"""❤️ *{question_count} CHALLENGES ATTACK!*  
 _*"Dedicate your hearts!" - Erwin Smith*_  
 All in or nothing.  
-~~~  
-🔥 *Sacrifice:*  
+- *Sacrifice:*  
 {formatted_questions_telegram}  
 Give it. Win it.""",
 
-                f"""⚔️ *{difference} BATTLES RAGE!*  
+        f"""⚔️ *{question_count} BATTLES RAGE!*  
 _*"This world is cruel, and yet so beautiful." - Mikasa Ackerman*_  
 Beauty’s in the struggle.  
->>>  
-🌸 *War:*  
+- *War:*  
 {formatted_questions_telegram}  
 Make it yours. Triumph.""",
 
-                # Jujutsu Kaisen
-                f"""👹 *{difference} CURSES SPAWN!*  
+        # Jujutsu Kaisen
+        f"""👹 *{question_count} CURSES SPAWN!*  
 _*"I’ll kill you with my own hands." - Yuji Itadori*_  
 Raw power’s yours.  
-===  
-💪 *Targets:*  
+- *Targets:*  
 {formatted_questions_telegram}  
 Rip them apart. No mercy.""",
 
-                f"""🌌 *{difference} CHALLENGES UNLEASH!*  
+        f"""🌌 *{question_count} CHALLENGES UNLEASH!*  
 _*"I’m not here to lose." - Satoru Gojo*_  
 Defeat’s not an option.  
----  
-👁️ *Domain:*  
+- *Domain:*  
 {formatted_questions_telegram}  
 Control it. Win it.""",
 
-                f"""🐺 *{difference} FOES RISE!*  
+        f"""🐺 *{question_count} FOES RISE!*  
 _*"Technique alone won’t win this." - Megumi Fushiguro*_  
 Guts seal the deal.  
-~~~  
-🌑 *Shadows:*  
+- *Shadows:*  
 {formatted_questions_telegram}  
 Summon it. Crush.""",
 
-                f"""⚡ *{difference} TRIALS DROP!*  
+        f"""⚡ *{question_count} TRIALS DROP!*  
 _*"I’ll show you what real jujutsu is." - Satoru Gojo*_  
 You’re the master.  
->>>  
-🎨 *Art:*  
+- *Art:*  
 {formatted_questions_telegram}  
 Teach them. End them.""",
 
-                f"""⏰ *{difference} CHALLENGES IGNITE!*  
+        f"""⏰ *{question_count} CHALLENGES IGNITE!*  
 _*"No regrets." - Nanami Kento*_  
 Forward only.  
-===  
-✂️ *Duty:*  
+- *Duty:*  
 {formatted_questions_telegram}  
 Cut through. Move on.""",
 
-                # The 48 Laws of Power
-                f"""🎭 *{difference} CHALLENGES EMERGE!*  
+        # The 48 Laws of Power
+        f"""🎭 *{question_count} CHALLENGES EMERGE!*  
 _*"Never outshine the master." - Law 1*_  
 But eclipse your foes.  
----  
-🌟 *Power:*  
+- *Power:*  
 {formatted_questions_telegram}  
 Steal the light. Rule.""",
 
-                f"""🗡️ *{difference} TESTS STRIKE!*  
+        f"""🗡️ *{question_count} TESTS STRIKE!*  
 _*"Win through actions, never through argument." - Law 9*_  
 Deeds are your crown.  
-~~~  
-🏆 *Proof:*  
+- *Proof:*  
 {formatted_questions_telegram}  
 Act. Reign.""",
 
-                f"""💣 *{difference} FOES CHALLENGE!*  
+        f"""💣 *{question_count} FOES CHALLENGE!*  
 _*"Crush your enemy totally." - Law 15*_  
 No remnants. Total victory.  
->>>  
-🔥 *Victory:*  
+- *Victory:*  
 {formatted_questions_telegram}  
 Obliterate. Rise.""",
 
-                f"""🕵️ *{difference} BATTLES BEGIN!*  
+        f"""🕵️ *{question_count} BATTLES BEGIN!*  
 _*"Pose as a friend, work as a spy." - Law 14*_  
 Knowledge is your blade.  
-===  
-🧠 *Deception:*  
+- *Deception:*  
 {formatted_questions_telegram}  
 Outsmart. Outlast.""",
 
-                f"""👑 *{difference} CHALLENGES CALL!*  
+        f"""👑 *{question_count} CHALLENGES CALL!*  
 _*"Play on people’s need to believe to create a cultlike following." - Law 27*_  
 They’ll chant your name.  
----  
-🌍 *Legion:*  
+- *Legion:*  
 {formatted_questions_telegram}  
 Inspire. Conquer.""",
 
-                # The Subtle Art of Not Giving a F*ck
-                f"""💀 *{difference} CHALLENGES HIT!*  
+        # The Subtle Art of Not Giving a F*ck
+        f"""💀 *{question_count} CHALLENGES HIT!*  
 _*"You’re going to die one day." - Mark Manson*_  
 So fight like it’s now.  
-~~~  
-⏳ *Life:*  
+- *Life:*  
 {formatted_questions_telegram}  
 Make it epic. Go.""",
 
-                f"""🚫 *{difference} TESTS DROP!*  
+        f"""🚫 *{question_count} TESTS DROP!*  
 _*"The only way to be comfortable with failure is to fail more." - Mark Manson*_  
 Fail fast. Win big.  
->>>  
-📈 *Growth:*  
+- *Growth:*  
 {formatted_questions_telegram}  
 Fall. Soar.""",
 
-                f"""👊 *{difference} FOES ARRIVE!*  
+        f"""👊 *{question_count} FOES ARRIVE!*  
 _*"Life is a series of problems. Pick good ones." - Mark Manson*_  
 These are yours.  
-===  
-🎲 *Choice:*  
+- *Choice:*  
 {formatted_questions_telegram}  
 Solve them. Win.""",
 
-                f"""🔇 *{difference} CHALLENGES IGNITE!*  
+        f"""🔇 *{question_count} CHALLENGES IGNITE!*  
 _*"Stop giving a fuck about what doesn’t matter." - Mark Manson*_  
 Focus is your weapon.  
----  
-🎯 *Focus:*  
+- *Focus:*  
 {formatted_questions_telegram}  
 Cut the crap. Strike.""",
 
-                f"""😊 *{difference} TRIALS RISE!*  
+        f"""😊 *{question_count} TRIALS RISE!*  
 _*"Happiness comes from solving problems." - Mark Manson*_  
 Joy’s in the grind.  
-~~~  
-🏅 *Reward:*  
+- *Reward:*  
 {formatted_questions_telegram}  
 Solve it. Feel it.""",
 
-                # Other Famous Books
-                f"""⚔️ *{difference} CHALLENGES STRIKE!*  
+        # Other Famous Books
+        f"""⚔️ *{question_count} CHALLENGES STRIKE!*  
 _*"The supreme art of war is to subdue the enemy without fighting." - Sun Tzu (The Art of War)*_  
 Mind over might.  
->>>  
-🧠 *Strategy:*  
+- *Strategy:*  
 {formatted_questions_telegram}  
 Outthink. Win.""",
 
-                f"""🌍 *{difference} FOES DROP!*  
+        f"""🌍 *{question_count} FOES DROP!*  
 _*"It is not death that a man should fear, but never beginning to live." - Marcus Aurelius (Meditations)*_  
 Live through this.  
-===  
-❤️ *Life:*  
+- *Life:*  
 {formatted_questions_telegram}  
 Start now. Thrive.""",
 
-                f"""🏜️ *{difference} BATTLES CALL!*  
+        f"""🏜️ *{question_count} BATTLES CALL!*  
 _*"I must not fear. Fear is the mind-killer." - Frank Herbert (Dune)*_  
 Fear’s the enemy.  
----  
-🛡️ *Courage:*  
+- *Courage:*  
 {formatted_questions_telegram}  
 Kill it. Rise.""",
 
-                f"""🧙 *{difference} TESTS EMERGE!*  
+        f"""🧙 *{question_count} TESTS EMERGE!*  
 _*"All we have to decide is what to do with the time that is given us." - Gandalf (The Fellowship of the Ring)*_  
 Time’s yours.  
-~~~  
-⏰ *Moment:*  
+- *Moment:*  
 {formatted_questions_telegram}  
 Choose. Win.""",
 
-                f"""🌲 *{difference} CHALLENGES RISE!*  
+        f"""🌲 *{question_count} CHALLENGES RISE!*  
 _*"The only way out is through." - Robert Frost*_  
 No retreat.  
->>>  
-➡️ *Path:*  
+- *Path:*  
 {formatted_questions_telegram}  
 Push. Prevail.""",
 
-                # Mixed Inspirational
-                f"""⭐ *{difference} CHALLENGES LAND!*  
+        # Mixed Inspirational
+        f"""⭐ *{question_count} CHALLENGES LAND!*  
 _*"Do or do not. There is no try." - Yoda (The Empire Strikes Back)*_  
 Full send or bust.  
-===  
-✨ *Force:*  
+- *Force:*  
 {formatted_questions_telegram}  
 Do it. Master.""",
 
-                f"""🗡️ *{difference} FOES STRIKE!*  
+        f"""🗡️ *{question_count} FOES STRIKE!*  
 _*"I am no man!" - Éowyn (The Return of the King)*_  
 Defy everything.  
----  
-🏆 *Defiance:*  
+- *Defiance:*  
 {formatted_questions_telegram}  
 Shatter them. Win.""",
 
-                f"""🔥 *{difference} TRIALS DROP!*  
+        f"""🔥 *{question_count} TRIALS DROP!*  
 _*"Rage, rage against the dying of the light." - Dylan Thomas*_  
 Burn fierce.  
-~~~  
-💥 *Fire:*  
+- *Fire:*  
 {formatted_questions_telegram}  
 Rage on. Shine.""",
 
-                f"""🪨 *{difference} CHALLENGES IGNITE!*  
+        f"""🪨 *{question_count} CHALLENGES IGNITE!*  
 _*"The obstacle is the way." - Ryan Holiday (The Obstacle Is the Way)*_  
 These are your steps.  
->>>  
-⬆️ *Road:*  
+- *Road:*  
 {formatted_questions_telegram}  
 Climb. Conquer.""",
 
-                f"""👹 *{difference} BATTLES BEGIN!*  
+        f"""👹 *{question_count} BATTLES BEGIN!*  
 _*"He who fights with monsters should look to it that he himself does not become a monster." - Nietzsche*_  
 Stay sharp.  
-===  
-🧠 *Edge:*  
+- *Edge:*  
 {formatted_questions_telegram}  
 Slay. Survive.""",
 
-                f"""🥊 *{difference} TESTS ARRIVE!*  
+        f"""🥊 *{question_count} TESTS ARRIVE!*  
 _*"It’s only after we’ve lost everything that we’re free to do anything." - Chuck Palahniuk (Fight Club)*_  
 Lose it all. Gain it back.  
----  
-🕊️ *Freedom:*  
+- *Freedom:*  
 {formatted_questions_telegram}  
 Break free. Rule.""",
 
-                f"""⚡ *{difference} FOES CHALLENGE!*  
+        f"""⚡ *{question_count} FOES CHALLENGE!*  
 _*"Pain is inevitable. Suffering is optional." - Haruki Murakami*_  
 Pain’s your ally.  
-~~~  
-💪 *Strength:*  
+- *Strength:*  
 {formatted_questions_telegram}  
 Use it. Win.""",
 
-                f"""🏛️ *{difference} CHALLENGES DROP!*  
+        f"""🏛️ *{question_count} CHALLENGES DROP!*  
 _*"Fortune favors the bold." - Virgil (The Aeneid)*_  
 Boldness pays.  
->>>  
-💰 *Fortune:*  
+- *Fortune:*  
 {formatted_questions_telegram}  
 Risk it. Take it.""",
 
-                f"""⚔️ *{difference} TRIALS RISE!*  
+        f"""⚔️ *{question_count} TRIALS RISE!*  
 _*"What we do in life echoes in eternity." - Maximus (Gladiator)*_  
 Make it echo.  
-===  
-📣 *Echo:*  
+- *Echo:*  
 {formatted_questions_telegram}  
 Fight loud. Live forever.""",
 
-                f"""🧠 *{difference} BATTLES CALL!*  
+        f"""🧠 *{question_count} BATTLES CALL!*  
 _*"The mind is its own place, and in itself can make a heaven of hell." - John Milton (Paradise Lost)*_  
 Hell’s theirs. Heaven’s yours.  
----  
-🌌 *Mind:*  
+- *Mind:*  
 {formatted_questions_telegram}  
 Forge it. Win.""",
 
-                f"""🔥 *{difference} CHALLENGES STRIKE!*  
+        f"""🔥 *{question_count} CHALLENGES STRIKE!*  
 _*"If you’re going through hell, keep going." - Winston Churchill*_  
 Hell’s the warmup.  
-~~~  
-➡️ *March:*  
+- *March:*  
 {formatted_questions_telegram}  
 Push on. Break through.""",
 
-                f"""⚓ *{difference} FOES DROP!*  
+        f"""⚓ *{question_count} FOES DROP!*  
 _*"I am the master of my fate, I am the captain of my soul." - William Ernest Henley (Invictus)*_  
 You command.  
->>>  
-⛵ *Destiny:*  
+- *Destiny:*  
 {formatted_questions_telegram}  
 Steer it. Win it.""",
 
-                f"""🏛️ *{difference} TESTS IGNITE!*  
+        f"""🏛️ *{question_count} TESTS IGNITE!*  
 _*"A man’s worth is no greater than his ambitions." - Marcus Aurelius (Meditations)*_  
 Aim high.  
-===  
-🎯 *Worth:*  
+- *Worth:*  
 {formatted_questions_telegram}  
 Reach it. Prove it.""",
 
-                f"""🌍 *{difference} CHALLENGES LAND!*  
+        f"""🌍 *{question_count} CHALLENGES LAND!*  
 _*"To live is to suffer; to survive is to find meaning in the suffering." - Viktor Frankl*_  
 Meaning’s in the fight.  
----  
-❤️ *Purpose:*  
+- *Purpose:*  
 {formatted_questions_telegram}  
 Find it. Thrive.""",
 
-                f"""⚡ *{difference} BATTLES RISE!*  
+        f"""⚡ *{question_count} BATTLES RISE!*  
 _*"The best revenge is to be unlike him who performed the injury." - Marcus Aurelius (Meditations)*_  
 Rise above.  
-~~~  
-🏆 *Revenge:*  
+- *Revenge:*  
 {formatted_questions_telegram}  
 Be better. Win.""",
 
-                f"""🌟 *{difference} TRIALS DROP!*  
+        f"""🌟 *{question_count} TRIALS DROP!*  
 _*"You must be the change you wish to see in the world." - Mahatma Gandhi*_  
 Change starts now.  
->>>  
-✨ *Change:*  
+- *Change:*  
 {formatted_questions_telegram}  
 Be it. Make it.""",
-            ]
+    ]
 
-            # Randomly select a template
-            selected_template = random.choice(notification_templates)
-            telegram_msg = selected_template
-            google_msg = selected_template.replace(formatted_questions_telegram, formatted_questions_google)
+    # Randomly select a template and send it
+    selected_template = random.choice(notification_templates)
+    telegram_msg = selected_template
+    google_msg = selected_template.replace(formatted_questions_telegram, formatted_questions_google)
 
-            send_telegram_message(telegram_msg)
-            send_google_chat_message(google_msg)
+    send_telegram_message(telegram_msg)
+    send_google_chat_message(google_msg)
 
-    set_db_value("question_count", question_count)
-    set_db_value("last_update", datetime.datetime.now().strftime("%Y-%m-%d"))
+    # Only update question_count if it has changed
+    if question_count != last_count:
+        set_db_value("question_count", question_count)
+        set_db_value("last_update", datetime.datetime.now().strftime("%Y-%m-%d"))
+        logging.info(f"Question count updated from {last_count} to {question_count}")
+    else:
+        logging.info("No change in question count, skipping update.")
 
 def check_end_of_day():
     ist = pytz.timezone("Asia/Kolkata")
