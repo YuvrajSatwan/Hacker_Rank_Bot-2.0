@@ -187,6 +187,113 @@ Endurance is your armor.
 {formatted_questions_telegram}  
 Swing ‘til dawn. Never break.""",
 
+            f"""🔴 *{question_count} TARGETS LOCKED!*  
+"I’m not locked in here with you. You’re locked in here with me." - Tony Stark (Iron Man)  
+You’re the hunter.  
+- *Prey List:*  
+{formatted_questions_telegram}  
+Strike fast. Genius wins.""",
+
+            f"""🌩️ *{question_count} CHALLENGES RISE!*  
+"Whatever it takes." - Avengers (Endgame)  
+Victory demands all.  
+- *Mission Brief:*  
+{formatted_questions_telegram}  
+Give it. Take it. No less.""",
+
+            f"""💀 *{question_count} FOES UNLEASHED!*  
+"We have a Hulk." - Tony Stark (The Avengers)  
+Rage is your edge.  
+- *Smash Targets:*  
+{formatted_questions_telegram}  
+Crush them. Leave rubble.""",
+
+            f"""⚙️ *{question_count} TRIALS IGNITE!*  
+"I am Iron Man." - Tony Stark (Iron Man)  
+You’re the spark.  
+- *Your Forge:*  
+{formatted_questions_telegram}  
+Build it. Claim it.""",
+
+            f"""🕷️ *{question_count} CHALLENGES LAND!*  
+"With great power comes great responsibility." - Uncle Ben (Spider-Man)  
+Power’s yours to wield.  
+- *Web of Duty:*  
+{formatted_questions_telegram}  
+Rise up. Own it.""",
+
+            # DC
+            f"""🌙 *{question_count} CHALLENGES STRIKE!*  
+"I’m not a hero. I’m a high-functioning disaster." - Batman (The Dark Knight, paraphrased)  
+Chaos fuels you.  
+- *Shadows:*  
+{formatted_questions_telegram}  
+Burn the night. Win the day.""",
+
+            f"""⚖️ *{question_count} TESTS DESCEND!*  
+"It’s not who I am underneath, but what I do that defines me." - Batman (Batman Begins)  
+Deeds are your voice.  
+- *Proof:*  
+{formatted_questions_telegram}  
+Act now. Be heard.""",
+
+            f"""🦇 *{question_count} FOES RISE!*  
+"Why do we fall? So we can learn to pick ourselves up." - Alfred (Batman Begins)  
+Every fall’s a lesson.  
+- *Ascent:*  
+{formatted_questions_telegram}  
+Rise stronger. Dominate.""",
+
+            f"""🌌 *{question_count} TRIALS EMERGE!*  
+"I am vengeance. I am the night." - Batman (Batman: The Animated Series)  
+You’re their nightmare.  
+- *Justice:*  
+{formatted_questions_telegram}  
+Strike swift. End them.""",
+
+            f"""☀️ *{question_count} CHALLENGES CALL!*  
+"The world only makes sense if you force it to." - Superman (Man of Steel, paraphrased)  
+Bend it to your will.  
+- *Order:*  
+{formatted_questions_telegram}  
+Shape it. Rule it.""",
+
+            # Game of Thrones
+            f"""👑 *{question_count} CHALLENGES MARCH!*  
+"When you play the game of thrones, you win or you die." - Cersei Lannister  
+Crown or grave.  
+- *Throne Room:*  
+{formatted_questions_telegram}  
+Take it. Reign.""",
+
+            f"""🔥 *{question_count} FOES APPROACH!*  
+"The night is dark and full of terrors." - Melisandre  
+You’re the dawn.  
+- *Light:*  
+{formatted_questions_telegram}  
+Burn them out. Shine.""",
+
+            f"""🌊 *{question_count} BATTLES BEGIN!*  
+"I am the storm, my lord. The first storm and the last." - Euron Greyjoy  
+You’re the tempest.  
+- *Fury:*  
+{formatted_questions_telegram}  
+Wreck them. Reign.""",
+
+            f"""🦁 *{question_count} TESTS ARRIVE!*  
+"A lion does not concern himself with the opinions of sheep." - Tywin Lannister  
+You’re the predator.  
+- *Dominion:*  
+{formatted_questions_telegram}  
+Roar. Feast.""",
+
+            f"""❄️ *{question_count} CHALLENGES DROP!*  
+"Winter is coming." - Ned Stark  
+Steel yourself.  
+- *Defense:*  
+{formatted_questions_telegram}  
+Stand firm. Thrive.""",
+
             # Attack on Titan
             f"""🏰 *{question_count} CHALLENGES BREACH!*  
 "If you win, you live. If you lose, you die." - Eren Yeager  
@@ -202,6 +309,171 @@ Momentum’s your blade.
 {formatted_questions_telegram}  
 Charge. Erase.""",
 
+            f"""🕊️ *{question_count} TRIALS LOOM!*  
+"We’re born free. All of us." - Erwin Smith  
+Freedom’s your birthright.  
+- *Liberty:*  
+{formatted_questions_telegram}  
+Earn it. Break free.""",
+
+            f"""❤️ *{question_count} CHALLENGES ATTACK!*  
+"Dedicate your hearts!" - Erwin Smith  
+All in or nothing.  
+- *Sacrifice:*  
+{formatted_questions_telegram}  
+Give it. Win it.""",
+
+            f"""⚔️ *{question_count} BATTLES RAGE!*  
+"This world is cruel, and yet so beautiful." - Mikasa Ackerman  
+Beauty’s in the struggle.  
+- *War:*  
+{formatted_questions_telegram}  
+Make it yours. Triumph.""",
+
+            # Jujutsu Kaisen
+            f"""👹 *{question_count} CURSES SPAWN!*  
+"I’ll kill you with my own hands." - Yuji Itadori  
+Raw power’s yours.  
+- *Targets:*  
+{formatted_questions_telegram}  
+Rip them apart. No mercy.""",
+
+            f"""🌌 *{question_count} CHALLENGES UNLEASH!*  
+"I’m not here to lose." - Satoru Gojo  
+Defeat’s not an option.  
+- *Domain:*  
+{formatted_questions_telegram}  
+Control it. Win it.""",
+
+            f"""🐺 *{question_count} FOES RISE!*  
+"Technique alone won’t win this." - Megumi Fushiguro  
+Guts seal the deal.  
+- *Shadows:*  
+{formatted_questions_telegram}  
+Summon it. Crush.""",
+
+            f"""⚡ *{question_count} TRIALS DROP!*  
+"I’ll show you what real jujutsu is." - Satoru Gojo  
+You’re the master.  
+- *Art:*  
+{formatted_questions_telegram}  
+Teach them. End them.""",
+
+            f"""⏰ *{question_count} CHALLENGES IGNITE!*  
+"No regrets." - Nanami Kento  
+Forward only.  
+- *Duty:*  
+{formatted_questions_telegram}  
+Cut through. Move on.""",
+
+            # The 48 Laws of Power
+            f"""🎭 *{question_count} CHALLENGES EMERGE!*  
+"Never outshine the master." - Law 1  
+But eclipse your foes.  
+- *Power:*  
+{formatted_questions_telegram}  
+Steal the light. Rule.""",
+
+            f"""🗡️ *{question_count} TESTS STRIKE!*  
+"Win through actions, never through argument." - Law 9  
+Deeds are your crown.  
+- *Proof:*  
+{formatted_questions_telegram}  
+Act. Reign.""",
+
+            f"""💣 *{question_count} FOES CHALLENGE!*  
+"Crush your enemy totally." - Law 15  
+No remnants. Total victory.  
+- *Victory:*  
+{formatted_questions_telegram}  
+Obliterate. Rise.""",
+
+            f"""🕵️ *{question_count} BATTLES BEGIN!*  
+"Pose as a friend, work as a spy." - Law 14  
+Knowledge is your blade.  
+- *Deception:*  
+{formatted_questions_telegram}  
+Outsmart. Outlast.""",
+
+            f"""👑 *{question_count} CHALLENGES CALL!*  
+"Play on people’s need to believe to create a cultlike following." - Law 27  
+They’ll chant your name.  
+- *Legion:*  
+{formatted_questions_telegram}  
+Inspire. Conquer.""",
+
+            # The Subtle Art of Not Giving a F*ck
+            f"""💀 *{question_count} CHALLENGES HIT!*  
+"You’re going to die one day." - Mark Manson  
+So fight like it’s now.  
+- *Life:*  
+{formatted_questions_telegram}  
+Make it epic. Go.""",
+
+            f"""🚫 *{question_count} TESTS DROP!*  
+"The only way to be comfortable with failure is to fail more." - Mark Manson  
+Fail fast. Win big.  
+- *Growth:*  
+{formatted_questions_telegram}  
+Fall. Soar.""",
+
+            f"""👊 *{question_count} FOES ARRIVE!*  
+"Life is a series of problems. Pick good ones." - Mark Manson  
+These are yours.  
+- *Choice:*  
+{formatted_questions_telegram}  
+Solve them. Win.""",
+
+            f"""🔇 *{question_count} CHALLENGES IGNITE!*  
+"Stop giving a fuck about what doesn’t matter." - Mark Manson  
+Focus is your weapon.  
+- *Focus:*  
+{formatted_questions_telegram}  
+Cut the crap. Strike.""",
+
+            f"""😊 *{question_count} TRIALS RISE!*  
+"Happiness comes from solving problems." - Mark Manson  
+Joy’s in the grind.  
+- *Reward:*  
+{formatted_questions_telegram}  
+Solve it. Feel it.""",
+
+            # Other Famous Books
+            f"""⚔️ *{question_count} CHALLENGES STRIKE!*  
+"The supreme art of war is to subdue the enemy without fighting." - Sun Tzu (The Art of War)  
+Mind over might.  
+- *Strategy:*  
+{formatted_questions_telegram}  
+Outthink. Win.""",
+
+            f"""🌍 *{question_count} FOES DROP!*  
+"It is not death that a man should fear, but never beginning to live." - Marcus Aurelius (Meditations)  
+Live through this.  
+- *Life:*  
+{formatted_questions_telegram}  
+Start now. Thrive.""",
+
+            f"""🏜️ *{question_count} BATTLES CALL!*  
+"I must not fear. Fear is the mind-killer." - Frank Herbert (Dune)  
+Fear’s the enemy.  
+- *Courage:*  
+{formatted_questions_telegram}  
+Kill it. Rise.""",
+
+            f"""🧙 *{question_count} TESTS EMERGE!*  
+"All we have to decide is what to do with the time that is given us." - Gandalf (The Fellowship of the Ring)  
+Time’s yours.  
+- *Moment:*  
+{formatted_questions_telegram}  
+Choose. Win.""",
+
+            f"""🌲 *{question_count} CHALLENGES RISE!*  
+"The only way out is through." - Robert Frost  
+No retreat.  
+- *Path:*  
+{formatted_questions_telegram}  
+Push. Prevail.""",
+
             # Mixed Inspirational
             f"""⭐ *{question_count} CHALLENGES LAND!*  
 "Do or do not. There is no try." - Yoda (The Empire Strikes Back)  
@@ -210,12 +482,110 @@ Full send or bust.
 {formatted_questions_telegram}  
 Do it. Master.""",
 
+            f"""🗡️ *{question_count} FOES STRIKE!*  
+"I am no man!" - Éowyn (The Return of the King)  
+Defy everything.  
+- *Defiance:*  
+{formatted_questions_telegram}  
+Shatter them. Win.""",
+
+            f"""🔥 *{question_count} TRIALS DROP!*  
+"Rage, rage against the dying of the light." - Dylan Thomas  
+Burn fierce.  
+- *Fire:*  
+{formatted_questions_telegram}  
+Rage on. Shine.""",
+
+            f"""🪨 *{question_count} CHALLENGES IGNITE!*  
+"The obstacle is the way." - Ryan Holiday (The Obstacle Is the Way)  
+These are your steps.  
+- *Road:*  
+{formatted_questions_telegram}  
+Climb. Conquer.""",
+
+            f"""👹 *{question_count} BATTLES BEGIN!*  
+"He who fights with monsters should look to it that he himself does not become a monster." - Nietzsche  
+Stay sharp.  
+- *Edge:*  
+{formatted_questions_telegram}  
+Slay. Survive.""",
+
+            f"""🥊 *{question_count} TESTS ARRIVE!*  
+"It’s only after we’ve lost everything that we’re free to do anything." - Chuck Palahniuk (Fight Club)  
+Lose it all. Gain it back.  
+- *Freedom:*  
+{formatted_questions_telegram}  
+Break free. Rule.""",
+
+            f"""⚡ *{question_count} FOES CHALLENGE!*  
+"Pain is inevitable. Suffering is optional." - Haruki Murakami  
+Pain’s your ally.  
+- *Strength:*  
+{formatted_questions_telegram}  
+Use it. Win.""",
+
+            f"""🏛️ *{question_count} CHALLENGES DROP!*  
+"Fortune favors the bold." - Virgil (The Aeneid)  
+Boldness pays.  
+- *Fortune:*  
+{formatted_questions_telegram}  
+Risk it. Take it.""",
+
             f"""⚔️ *{question_count} TRIALS RISE!*  
 "What we do in life echoes in eternity." - Maximus (Gladiator)  
 Make it echo.  
--.echo *Echo:*  
+- *Echo:*  
 {formatted_questions_telegram}  
 Fight loud. Live forever.""",
+
+            f"""🧠 *{question_count} BATTLES CALL!*  
+"The mind is its own place, and in itself can make a heaven of hell." - John Milton (Paradise Lost)  
+Hell’s theirs. Heaven’s yours.  
+- *Mind:*  
+{formatted_questions_telegram}  
+Forge it. Win.""",
+
+            f"""🔥 *{question_count} CHALLENGES STRIKE!*  
+"If you’re going through hell, keep going." - Winston Churchill  
+Hell’s the warmup.  
+- *March:*  
+{formatted_questions_telegram}  
+Push on. Break through.""",
+
+            f"""⚓ *{question_count} FOES DROP!*  
+"I am the master of my fate, I am the captain of my soul." - William Ernest Henley (Invictus)  
+You command.  
+- *Destiny:*  
+{formatted_questions_telegram}  
+Steer it. Win it.""",
+
+            f"""🏛️ *{question_count} TESTS IGNITE!*  
+"A man’s worth is no greater than his ambitions." - Marcus Aurelius (Meditations)  
+Aim high.  
+- *Worth:*  
+{formatted_questions_telegram}  
+Reach it. Prove it.""",
+
+            f"""🌍 *{question_count} CHALLENGES LAND!*  
+"To live is to suffer; to survive is to find meaning in the suffering." - Viktor Frankl  
+Meaning’s in the fight.  
+- *Purpose:*  
+{formatted_questions_telegram}  
+Find it. Thrive.""",
+
+            f"""⚡ *{question_count} BATTLES RISE!*  
+"The best revenge is to be unlike him who performed the injury." - Marcus Aurelius (Meditations)  
+Rise above.  
+- *Revenge:*  
+{formatted_questions_telegram}  
+Be better. Win.""",
+
+            f"""🌟 *{question_count} TRIALS DROP!*  
+"You must be the change you wish to see in the world." - Mahatma Gandhi  
+Change starts now.  
+- *Change:*  
+{formatted_questions_telegram}  
+Be it. Make it.""",
         ]
 
         selected_template = random.choice(notification_templates)
