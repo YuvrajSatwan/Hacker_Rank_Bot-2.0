@@ -134,9 +134,9 @@ def format_questions(questions, platform="telegram"):
 
     for name, slug in questions:
         if platform.lower() == "telegram":
-            formatted.append(f"🔸<a href='{base_url}/{slug}'>{name}</a>")
+            formatted.append(f"<a href='{base_url}/{slug}'>{name}</a>")
         elif platform.lower() == "google_chat":
-            formatted.append(f"🔸<{base_url}/{slug}|{name}>")
+            formatted.append(f"<{base_url}/{slug}|{name}>")
 
     return "\n".join(formatted)
 
