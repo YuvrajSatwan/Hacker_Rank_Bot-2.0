@@ -163,7 +163,7 @@ def notify_question_count():
         return
 
     last_count_raw = get_db_value("question_count")
-    last_count = int(last_count_raw) if last_count_raw is not None else 0
+    last_count = int(last_count_raw) if last_count_raw is not None and last_count_raw.isdigit() else 0
     logging.info(f"Last count: {last_count}, Current count: {question_count}")
 
     # Only notify if the count has changed
@@ -187,7 +187,7 @@ Endurance is your armor.
 {formatted_questions_telegram}  
 Swing ‘til dawn. Never break.""",
 
-            # Attack on Titan (including your requested Eren Yeager quote)
+            # Attack on Titan
             f"""🏰 *{question_count} CHALLENGES BREACH!*  
 "If you win, you live. If you lose, you die." - Eren Yeager  
 Survival’s the stakes.  
@@ -213,21 +213,18 @@ Do it. Master.""",
             f"""⚔️ *{question_count} TRIALS RISE!*  
 "What we do in life echoes in eternity." - Maximus (Gladiator)  
 Make it echo.  
-- *Echo:*  
+-.echo *Echo:*  
 {formatted_questions_telegram}  
 Fight loud. Live forever.""",
         ]
 
-        # Randomly select a template
         selected_template = random.choice(notification_templates)
         telegram_msg = selected_template
         google_msg = selected_template.replace(formatted_questions_telegram, formatted_questions_google)
 
-        # Send notifications
         send_telegram_message(telegram_msg)
         send_google_chat_message(google_msg)
 
-        # Update database with new count and timestamp
         set_db_value("question_count", question_count)
         set_db_value("last_update", datetime.datetime.now().strftime("%Y-%m-%d"))
         logging.info(f"Question count updated from {last_count} to {question_count} and notification sent.")
