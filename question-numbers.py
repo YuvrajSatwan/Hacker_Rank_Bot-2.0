@@ -1,3 +1,4 @@
+
 import requests
 import os
 import datetime
@@ -129,19 +130,8 @@ def fetch_questions():
         return None, []
 
 
-def format_questions(questions, platform="telegram"):
-    """Format questions with platform-specific links"""
-    base_url = f"{HR_BASE_URL}"
-    formatted = []
-    
-    for name, slug in questions:
-        if platform.lower() == "telegram":
-            # Telegram Markdown format
-            formatted.append(f"▫️ [{name}]({base_url}/{slug})")
-        elif platform.lower() == "google_chat":
-            # Google Chat link format
-            formatted.append(f"▫️ <{base_url}/{slug}|{name}>")
-    return "\n".join(formatted)
+def format_questions(questions):
+    return "\n".join([f"🔗 [{name}]({HR_BASE_URL}/{slug})" for name, slug in questions])
 
 # Notification System
 def send_telegram_message(message):
@@ -163,23 +153,8 @@ def send_telegram_message(message):
         logging.error(f"Telegram Request Exception: {e}")
 
 def send_google_chat_message(message):
-    """Send message to Google Chat with proper formatting"""
     try:
-        response = requests.post(
-            GOOGLE_CHAT_WEBHOOK_URL,
-            json={
-                "text": message,
-                "cards": [{
-                    "sections": [{
-                        "widgets": [{
-                            "textParagraph": {
-                                "text": message.replace("_", "*")  # Preserve emphasis
-                            }
-                        }]
-                    }]
-                }]
-            }
-        )
+        response = requests.post(GOOGLE_CHAT_WEBHOOK_URL, json={"text": message})
         if response.status_code != 200:
             logging.error(f"Google Chat API error: Status code {response.status_code}, Response: {response.text}")
         else:
@@ -199,19 +174,12 @@ def notify_question_count():
     last_count = int(get_db_value("question_count") or 0)
 
     if last_count == 0:
-        # Replaced "First Blood!" with "🎉 Contest Launch!"
-        telegram_initial = f"""🎉 *Contest Launch!* {question_count} challenges detected!
+        message = f"""🚀 *First Blood!* {question_count} challenges detected!
 📌 **Initial Problems:**
-{format_questions(questions, "telegram")}
+{format_questions(questions)}
 _'First to solve gets bragging rights!' - Tony Stark_"""
-
-        google_initial = f"""🎉 *Contest Launch!* {question_count} challenges detected!
-📌 **Initial Problems:**
-{format_questions(questions, "google_chat")}
-_'First to solve gets bragging rights!' - Tony Stark_"""
-
-        send_telegram_message(telegram_initial)
-        send_google_chat_message(google_initial)
+        send_telegram_message(message)
+        send_google_chat_message(message)
     else:
         difference = question_count - last_count
         if difference > 0:
@@ -401,21 +369,13 @@ _'First to solve gets bragging rights!' - Tony Stark_"""
 
             chosen = random.choice(templates)
             suffix = "s" if difference > 1 else ""
-            # Create platform-specific messages
-            telegram_msg = chosen.format(
+            message = chosen.format(
                 difference=difference,
                 suffix=suffix,
-                questions=format_questions(new_questions, platform="telegram")
+                questions=format_questions(new_questions)
             )
-
-            google_msg = chosen.format(
-                difference=difference,
-                suffix=suffix,
-                questions=format_questions(new_questions, platform="google_chat")
-            )
-
-            send_telegram_message(telegram_msg)
-            send_google_chat_message(google_msg)
+            send_telegram_message(message)
+            send_google_chat_message(message)
 
     set_db_value("question_count", question_count)
     set_db_value("last_update", datetime.datetime.now().strftime("%Y-%m-%d"))
@@ -520,7 +480,7 @@ def check_end_of_day():
                     "⚡ Repulsors charging..."
                 ),
                 (
-                    f"⚔️ *Valhalla Report*\n"
+                    "⚔️ *Valhalla Report*\n"
                     "'The sun will shine on us again.' - Loki (Thor: Ragnarok)\n\n"
                     "_No new wars. Bifrost quiet._\n\n"
                     "🌈 Heimdall watches..."
