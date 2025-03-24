@@ -12,7 +12,7 @@ TELEGRAM_BOT_TOKEN = "7211810846:AAFchPh2P70ZWlQPEH1WAVgaLxngvkHmz3A"
 TELEGRAM_CHAT_ID = "1631288026"
 GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAABLlXXMM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=AxaA5jffPFX7ks0JXC4tGUkisYoSRvH8rv0BtX9xHBg"
 CONTEST_SLUG = "peacemakers24b1"
-DB_PATH = "/app/data/hackerrank_counts.db"  # Persistent volume path
+DB_PATH = "/app/data/hackerrank_counts.db"
 HR_BASE_URL = f"https://www.hackerrank.com/contests/{CONTEST_SLUG}/challenges"
 
 COOKIES = {
@@ -52,7 +52,6 @@ def setup_database():
             cursor.execute("INSERT OR IGNORE INTO tracker VALUES ('question_slugs', '[]')")
             cursor.execute("INSERT OR IGNORE INTO tracker VALUES ('last_update', '')")
             cursor.execute("INSERT OR IGNORE INTO tracker VALUES ('no_questions_sent', '')")
-            cursor.execute("INSERT OR IGNORE INTO tracker VALUES ('test_reset_done', '0')")  # New flag
             conn.commit()
             logging.info("Database setup complete.")
         except sqlite3.Error as e:
@@ -158,19 +157,7 @@ def send_google_chat_message(message):
 
 def initialize_database_if_empty():
     last_slugs_raw = get_db_value("question_slugs")
-    test_reset_done = int(get_db_value("test_reset_done") or 0)
-    
-    # One-time reset to 120 for testing
-    if not test_reset_done:
-        _, questions = fetch_questions(120)
-        if questions:
-            real_slugs = [q[1] for q in questions]
-            set_db_value("question_slugs", json.dumps(real_slugs))
-            set_db_value("last_update", "2025-03-24")
-            set_db_value("test_reset_done", "1")  # Mark reset as done
-            logging.info(f"Test reset: Initialized database with 120 real questions: {real_slugs[:5]}...")
-    # Normal initialization if empty (for first real run)
-    elif not last_slugs_raw or json.loads(last_slugs_raw) == []:
+    if not last_slugs_raw or json.loads(last_slugs_raw) == []:
         _, questions = fetch_questions(120)
         if questions:
             real_slugs = [q[1] for q in questions]
@@ -194,8 +181,8 @@ def notify_question_count():
     except (json.JSONDecodeError, ValueError) as e:
         logging.warning(f"Failed to parse last_slugs ({e}), defaulting to empty list.")
         last_slugs = []
-    logging.info(f"Previous slugs count: {len(last_slugs)}, sample: {last_slugs[:5]}...")
 
+    logging.info(f"Previous slugs count: {len(last_slugs)}, sample: {last_slugs[:5]}...")
     current_slugs = [q[1] for q in questions]
     logging.info(f"Current slugs count: {len(current_slugs)}, sample: {current_slugs[:5]}...")
 
