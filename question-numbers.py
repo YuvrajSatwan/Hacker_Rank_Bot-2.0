@@ -12,7 +12,7 @@ TELEGRAM_BOT_TOKEN = "7211810846:AAFchPh2P70ZWlQPEH1WAVgaLxngvkHmz3A"
 TELEGRAM_CHAT_ID = "1631288026"
 GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAABLlXXMM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=AxaA5jffPFX7ks0JXC4tGUkisYoSRvH8rv0BtX9xHBg"
 CONTEST_SLUG = "peacemakers24b1"
-DB_PATH = "hackerrank_counts.db"
+DB_PATH = "/app/data/hackerrank_counts.db"  # Persistent volume path
 HR_BASE_URL = f"https://www.hackerrank.com/contests/{CONTEST_SLUG}/challenges"
 
 COOKIES = {
@@ -33,6 +33,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 
 def connect_db():
     try:
+        os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
         conn = sqlite3.connect(DB_PATH)
         return conn
     except sqlite3.Error as e:
@@ -51,23 +52,13 @@ def setup_database():
             cursor.execute("INSERT OR IGNORE INTO tracker VALUES ('question_slugs', '[]')")
             cursor.execute("INSERT OR IGNORE INTO tracker VALUES ('last_update', '')")
             cursor.execute("INSERT OR IGNORE INTO tracker VALUES ('no_questions_sent', '')")
+            cursor.execute("INSERT OR IGNORE INTO tracker VALUES ('test_reset_done', '0')")  # New flag
             conn.commit()
             logging.info("Database setup complete.")
         except sqlite3.Error as e:
             logging.error(f"Database setup error: {e}")
         finally:
             conn.close()
-            def initialize_database_if_empty():
-    last_slugs_raw = get_db_value("question_slugs")
-    # Force reset for testing (comment out after one run)
-    last_slugs = []
-    if not last_slugs_raw or last_slugs == []:
-        _, questions = fetch_questions(120)
-        if questions:
-            real_slugs = [q[1] for q in questions]
-            set_db_value("question_slugs", json.dumps(real_slugs))
-            set_db_value("last_update", "2025-03-24")
-            logging.info(f"Initialized database with 120 real questions: {real_slugs[:5]}...")
 
 def get_db_value(key):
     conn = connect_db()
@@ -96,7 +87,7 @@ def set_db_value(key, value):
         finally:
             conn.close()
 
-def fetch_questions():
+def fetch_questions(limit_count=None):
     offset = 0
     limit = 10
     all_questions = []
@@ -113,6 +104,10 @@ def fetch_questions():
                 break
             all_questions.extend([(q["name"], q["slug"]) for q in questions])
             offset += limit
+            if limit_count and len(all_questions) >= limit_count:
+                break
+        if limit_count:
+            all_questions = all_questions[:limit_count]
         logging.info(f"Fetched {len(all_questions)} questions from API.")
         return len(all_questions), all_questions
     except (requests.exceptions.RequestException, ValueError) as e:
@@ -161,7 +156,31 @@ def send_google_chat_message(message):
     except requests.exceptions.RequestException as e:
         logging.error(f"Google Chat Request Exception: {e}")
 
+def initialize_database_if_empty():
+    last_slugs_raw = get_db_value("question_slugs")
+    test_reset_done = int(get_db_value("test_reset_done") or 0)
+    
+    # One-time reset to 120 for testing
+    if not test_reset_done:
+        _, questions = fetch_questions(120)
+        if questions:
+            real_slugs = [q[1] for q in questions]
+            set_db_value("question_slugs", json.dumps(real_slugs))
+            set_db_value("last_update", "2025-03-24")
+            set_db_value("test_reset_done", "1")  # Mark reset as done
+            logging.info(f"Test reset: Initialized database with 120 real questions: {real_slugs[:5]}...")
+    # Normal initialization if empty (for first real run)
+    elif not last_slugs_raw or json.loads(last_slugs_raw) == []:
+        _, questions = fetch_questions(120)
+        if questions:
+            real_slugs = [q[1] for q in questions]
+            set_db_value("question_slugs", json.dumps(real_slugs))
+            set_db_value("last_update", "2025-03-24")
+            logging.info(f"Initialized database with 120 real questions: {real_slugs[:5]}...")
+
 def notify_question_count():
+    initialize_database_if_empty()
+
     question_count, questions = fetch_questions()
     if question_count is None:
         logging.warning("Failed to fetch questions, skipping notification.")
@@ -184,7 +203,6 @@ def notify_question_count():
     new_questions = [q for q in questions if q[1] in new_slugs]
     logging.info(f"New slugs found: {len(new_slugs)}, list: {new_slugs}")
 
-    # Print names of new questions
     if new_questions:
         print("New Questions Detected:")
         for name, slug in new_questions:
@@ -224,7 +242,7 @@ def notify_question_count():
             f"🌍 {len(new_questions)} trials shift the balance. 'Perfectly balanced, as all things should be.' - Thanos. Restore order with your mastery.\n\n📌 New Questions:\n{formatted_questions_telegram}"
         ]
 
-        if last_slugs_raw is None:  # Truly first run
+        if last_slugs_raw is None:
             telegram_msg = f"🚀 First Check! {question_count} questions are live!\n\n📌 **Latest Questions:**\n{format_questions(questions, 'telegram')}"
             google_msg = f"🚀 First Check! {question_count} questions are live!\n\n📌 **Latest Questions:**\n{format_questions(questions, 'google_chat')}"
         else:
@@ -241,56 +259,9 @@ def notify_question_count():
     else:
         logging.info("No new questions found, no notification sent.")
 
-def check_end_of_day():
-    ist = pytz.timezone("Asia/Kolkata")
-    now = datetime.datetime.now(ist)
-    today = now.strftime("%Y-%m-%d")
-
-    if now.hour >= 22 and (now.hour != 22 or now.minute >= 30):
-        if get_db_value("last_update") != today and get_db_value("no_questions_sent") != today:
-            eod_messages = [
-                "🕰️ The battlefield remained quiet today. But remember, the real warriors sharpen their blades in silence. ⚔️🔥",
-                "🤖 No new challenges today, but legends never rest. Stay sharp, for the storm may arrive tomorrow! ⚡",
-                "⏳ A day without new battles... The silence before the storm? Stay alert, coder! 🚀",
-                "🌓 The coding universe is quiet tonight. Perhaps a challenge awaits at dawn? Be ready! 🌅",
-                "💭 Today, the servers rest. The future awaits! 🚀",
-                "🚀 The best coders don't wait for challenges... They create their own battles in silence. Did you grind today?",
-                "💪 Today's silence is tomorrow's victory... Every line of code you write in the shadows will echo in the leaderboard!",
-                "🌑 No questions today... but the battlefield isn't empty — it's waiting for the few who are hungry enough to train in the silence.",
-                "🔥 Legends aren't made on the leaderboard... they are built in the days no one is watching. What will you build today?",
-                "⏳ A day without challenges is not a rest day... It's a test of **who trains even when the battlefield is empty.**",
-                "💭 The Void is silent today... but the real warriors never wait for orders. They grind in the shadows.",
-                "👀 The leaderboard doesn't see what you do in silence... but it will one day remember your name.",
-                "⚡ A day without battles is a blessing... Because the greatest warriors sharpen their blades when the world sleeps.",
-                "🚶‍♂️ One day, the leaderboard will call your name... But only if you walk the path when no one is watching.",
-                "🔒 No new challenges today... That's not an excuse — it's an invitation to outwork everyone silently.",
-                "🌘 The Void may be empty... but every line of code you write in this silence is one step closer to the 1% Club.",
-                "🔥 The difference between 99% and 1%? What you do when there are no new battles to fight.",
-                "⚔️ The leaderboard is sleeping... but the VoidWalkers are still grinding. Are you one of them?",
-                "🌑 Today the battlefield is empty... But the rise of warriors always begins in the shadows.",
-                "💀 Real coders fear comfort more than failure. Did you grind today, or did you rest with the 99%?",
-                "🚀 Zero questions = Zero excuses. If the world isn't testing you... test yourself.",
-                "🔄 No new questions... But consistency beats talent when talent is sleeping.",
-                "⚡ The leaderboard will remember your name... but only if you grind in the days no one sees.",
-                "💪 A silent day is the best day... because that's when only the real ones keep coding.",
-                "📜 One empty day will never break a legend... but one skipped day might.",
-                "🔥 No new questions... But there's always one unsolved problem — the one inside your own mind.",
-                "⚔️ The journey is not about coding every day... it's about becoming the kind of person who codes every day."
-            ]
-            eod_msg = random.choice(eod_messages)
-            send_telegram_message(eod_msg)
-            send_google_chat_message(eod_msg)
-            set_db_value("no_questions_sent", today)
-            logging.info("End of day notification sent.")
-        else:
-            logging.info("End of day check skipped, already sent or updated today.")
-    else:
-        logging.info("End of day check skipped, not after 10:30 PM IST.")
-
 if __name__ == "__main__":
     try:
         setup_database()
         notify_question_count()
-        # check_end_of_day()
     except Exception as e:
         logging.exception(f"An unhandled error occurred: {e}")
