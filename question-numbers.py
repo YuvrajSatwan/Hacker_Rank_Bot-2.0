@@ -57,6 +57,17 @@ def setup_database():
             logging.error(f"Database setup error: {e}")
         finally:
             conn.close()
+            def initialize_database_if_empty():
+    last_slugs_raw = get_db_value("question_slugs")
+    # Force reset for testing (comment out after one run)
+    last_slugs = []
+    if not last_slugs_raw or last_slugs == []:
+        _, questions = fetch_questions(120)
+        if questions:
+            real_slugs = [q[1] for q in questions]
+            set_db_value("question_slugs", json.dumps(real_slugs))
+            set_db_value("last_update", "2025-03-24")
+            logging.info(f"Initialized database with 120 real questions: {real_slugs[:5]}...")
 
 def get_db_value(key):
     conn = connect_db()
