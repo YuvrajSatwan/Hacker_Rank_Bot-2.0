@@ -10,7 +10,7 @@ import json
 # Configuration
 TELEGRAM_BOT_TOKEN = "7211810846:AAFchPh2P70ZWlQPEH1WAVgaLxngvkHmz3A"
 TELEGRAM_CHAT_ID = "1631288026"
-GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAABLlXXMM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=AxaA5jffPFX7ks0JXC4tGUkisYoSRvH8rv0BtX9xHBg"
+GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAAWsRE_1A/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=O2VieDWlvGSYYtVGEAia4hWxQQq7jYOs5TxKbeMSpGA"
 CONTEST_SLUG = "peacemakers24b1"
 DB_PATH = "/app/data/hackerrank_counts.db"
 HR_BASE_URL = f"https://www.hackerrank.com/contests/{CONTEST_SLUG}/challenges"
@@ -218,14 +218,14 @@ def notify_question_count():
             f"new challenges... {len(new_questions)} coding mystery await. Will you solve them before anyone else? ⚙️\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"🕵️ A secret has been unveiled... {len(new_questions)} fresh problem are here. The hunt for solutions begins now! 🔥\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"🌌 {len(new_questions)} challenges emerge from the dark. 'The hardest choices require the strongest wills.' - Thanos. Shape your fate with every solution.\n\n📌 New Questions:\n{formatted_questions_telegram}",
-            f"⚡ {len(new_questions)} trials awaken. 'I can do this all day.' - Captain America. Persistence carves the path to greatness.\n\n📌 New Questions:\n{formatted_questions_telegram}",
-            f"🛡️ {len(new_questions)} quests stand before you. 'With great power comes great responsibility.' - Uncle Ben. Wield your intellect to rise.\n\n📌 New Questions:\n{formatted_questions_telegram}",
-            f"🔥 {len(new_questions)} enigmas ignite the horizon. 'Why do we fall? So we can learn to pick ourselves up.' - Alfred. Each step builds your strength.\n\n📌 New Questions:\n{formatted_questions_telegram}",
-            f"🌠 {len(new_questions)} puzzles call your name. 'I am Iron Man.' - Tony Stark. Craft your legacy through every line of code.\n\n📌 New Questions:\n{formatted_questions_telegram}",
+            f"⚡ {len(new_questions)} trials awaken. Persistence carves the path to greatness.\n\n📌 New Questions:\n{formatted_questions_telegram}",
+            f"🛡️ {len(new_questions)} quests stand before you. 'With great power comes great responsibility.'  Wield your intellect to rise.\n\n📌 New Questions:\n{formatted_questions_telegram}",
+            f"🔥 {len(new_questions)} enigmas ignite the horizon. 'Why do we fall? So we can learn to pick ourselves up.' Each step builds your strength.\n\n📌 New Questions:\n{formatted_questions_telegram}",
+            f"🌠 {len(new_questions)} puzzles call your name.Craft your legacy through every line of code.\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"⚙️ {len(new_questions)} tests of will arise. 'It’s not who I am underneath, but what I do that defines me.' - Batman. Let your actions speak.\n\n📌 New Questions:\n{formatted_questions_telegram}",
-            f"⏳ {len(new_questions)} challenges mark this moment. 'Whatever it takes.' - Avengers. Sacrifice today for triumph tomorrow.\n\n📌 New Questions:\n{formatted_questions_telegram}",
-            f"🗡️ {len(new_questions)} battles demand your focus. 'There is only one god, and his name is Death.' - Wonder Woman. Conquer them with unrelenting clarity.\n\n📌 New Questions:\n{formatted_questions_telegram}",
-            f"💡 {len(new_questions)} riddles test your soul. 'I’m vengeance.' - Batman. Strike through the shadows with precision.\n\n📌 New Questions:\n{formatted_questions_telegram}",
+            f"⏳ {len(new_questions)} challenges mark this moment. 'Whatever it takes.' Sacrifice today for triumph tomorrow.\n\n📌 New Questions:\n{formatted_questions_telegram}",
+            f"🗡️ {len(new_questions)} battles demand your focus. Conquer them with unrelenting clarity.\n\n📌 New Questions:\n{formatted_questions_telegram}",
+            f"💡 {len(new_questions)} riddles test your soul. Strike through the shadows with precision.\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"🌍 {len(new_questions)} trials shift the balance. 'Perfectly balanced, as all things should be.' - Thanos. Restore order with your mastery.\n\n📌 New Questions:\n{formatted_questions_telegram}"
         ]
 
