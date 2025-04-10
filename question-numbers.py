@@ -10,7 +10,7 @@ import json
 # Configuration
 TELEGRAM_BOT_TOKEN = "7211810846:AAFchPh2P70ZWlQPEH1WAVgaLxngvkHmz3A"
 TELEGRAM_CHAT_ID = "1631288026"
-GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAABLlXXMM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=AxaA5jffPFX7ks0JXC4tGUkisYoSRvH8rv0BtX9xHBg"
+GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAAWsRE_1A/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=O2VieDWlvGSYYtVGEAia4hWxQQq7jYOs5TxKbeMSpGA"
 CONTEST_SLUG = "peacemakers24b1"
 DB_PATH = "/app/data/hackerrank_counts.db"
 HR_BASE_URL = f"https://www.hackerrank.com/contests/{CONTEST_SLUG}/challenges"
