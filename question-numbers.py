@@ -10,7 +10,7 @@ import json
 # Configuration
 TELEGRAM_BOT_TOKEN = "7211810846:AAFchPh2P70ZWlQPEH1WAVgaLxngvkHmz3A"
 TELEGRAM_CHAT_ID = "1631288026"
-GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAAWsRE_1A/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=O2VieDWlvGSYYtVGEAia4hWxQQq7jYOs5TxKbeMSpGA"
+GOOGLE_CHAT_WEBHOOK_URL = "https://chat.googleapis.com/v1/spaces/AAAABLlXXMM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=AxaA5jffPFX7ks0JXC4tGUkisYoSRvH8rv0BtX9xHBg"
 CONTEST_SLUG = "peacemakers24b1"
 DB_PATH = "/app/data/hackerrank_counts.db"
 HR_BASE_URL = f"https://www.hackerrank.com/contests/{CONTEST_SLUG}/challenges"
@@ -158,7 +158,7 @@ def send_google_chat_message(message):
 def initialize_database_if_empty():
     last_slugs_raw = get_db_value("question_slugs")
     if not last_slugs_raw or json.loads(last_slugs_raw) == []:
-        _, questions = fetch_questions(120)
+        _, questions = fetch_questions()
         if questions:
             real_slugs = [q[1] for q in questions]
             set_db_value("question_slugs", json.dumps(real_slugs))
