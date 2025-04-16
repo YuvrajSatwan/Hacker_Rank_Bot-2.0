@@ -217,7 +217,7 @@ def notify_question_count():
             f"💥 The battlefield roars! {len(new_questions)} new coding quest have arrived. Show the world your skills! 🌟\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"new challenges... {len(new_questions)} coding mystery await. Will you solve them before anyone else? ⚙️\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"🕵️ A secret has been unveiled... {len(new_questions)} fresh problem are here. The hunt for solutions begins now! 🔥\n\n📌 New Questions:\n{formatted_questions_telegram}",
-            f"🌌 {len(new_questions)} challenges emerge. 'The hardest choices require the strongest wills.' - Thanos. Shape your fate with every solution.\n\n📌 New Questions:\n{formatted_questions_telegram}",
+            f"🌌 {len(new_questions)} challenges emerge. 'The hardest choices require the strongest wills.'  Shape your fate with every solution.\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"⚡ {len(new_questions)} trial awaken. Persistence carves the path to greatness.\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"🛡️ {len(new_questions)} quests stand before you. 'With great power comes great responsibility.'  Wield your intellect to rise.\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"🔥 {len(new_questions)} enigmas ignite the horizon. 'Why do we fall? So we can learn to pick ourselves up.' Each step builds your strength.\n\n📌 New Questions:\n{formatted_questions_telegram}",
@@ -226,7 +226,7 @@ def notify_question_count():
             f"⏳ {len(new_questions)} challenges mark this moment. 'Whatever it takes...' Sacrifice today for triumph tomorrow.\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"🗡️ {len(new_questions)} battles demand your focus. Conquer them with unrelenting clarity.\n\n📌 New Questions:\n{formatted_questions_telegram}",
             f"💡 {len(new_questions)} riddle test your soul. Strike through the shadows with precision.\n\n📌 New Questions:\n{formatted_questions_telegram}",
-            f"🌍 {len(new_questions)} trial shift the balance. 'Perfectly balanced, as all things should be.' - Thanos. Restore order with your mastery.\n\n📌 New Questions:\n{formatted_questions_telegram}"
+            f"🌍 {len(new_questions)} trial shift the balance. 'Perfectly balanced, as all things should be.' -  Restore order with your mastery.\n\n📌 New Questions:\n{formatted_questions_telegram}"
         ]
 
         if last_slugs_raw is None:
